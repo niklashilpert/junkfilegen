@@ -26,13 +26,18 @@ fn main() {
 
             let filename = conf.0;
             let filesize = conf.1;
-            let overwrite_all = conf.2;
+            let overwrite_always = conf.2;
 
-            let filepath = format!("./{}", filename);
+            let filepath = if filename.starts_with("/") {
+                filename.clone()
+            } else {
+                format!("./{}", filename)
+            };
+
             let path = Path::new(&filepath);
 
             // If the file already exists and the user didn't specify to always override ...
-            if path.is_file() && !overwrite_all {
+            if path.is_file() && !overwrite_always {
                 println!("The file you are trying to create already exists. Overwrite? [Y/n]");
                 let response = read_line();
                 let response = response.trim();
