@@ -17,7 +17,7 @@ fn main() {
     let program_args: Vec<String> = env::args().collect();
 
     // Tests whether the program arguments fit the required scheme
-    let conf = check_arguments_for_file_config(&program_args);
+    let conf = check_arguments_for_file_config(program_args);
 
     match conf {
         // If the arguments are in the right format ...
@@ -48,7 +48,7 @@ fn main() {
                 Ok(file) => {
 
                     let start = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
-                    write_random_bytes(file, filename, filesize);
+                    write_random_bytes(file, &filename, filesize);
                     let end = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
 
                     let millis = end - start;
@@ -56,7 +56,7 @@ fn main() {
                     println!("Time taken: {}s {}ms", secs, millis);
                 },
                 Err(e) => {
-                    handle_io_error(e.kind(), filename);
+                    handle_io_error(e.kind(), &filename);
                 },
             };
         },
@@ -73,25 +73,22 @@ fn main() {
 
 }
 
-fn check_arguments_for_file_config(args: &Vec<String>) -> Result<(&str, usize, bool), usize> {
-    let len = args.len();
-    
-    if len != 3 && len != 4 {
+fn check_arguments_for_file_config(mut args: Vec<String>) -> Result<(String, usize, bool), usize> {
+
+    args.remove(0);
+
+    if args.len() != 2 && args.len() != 3 {
         return Err(0); // Wrong argument format
     }
 
-    let mut name = "";
-    let mut size = "";
-    let mut overwrite_always = false;
+    let overwrite_always = args[0] == "-o";
 
-    if len == 3 {
-        name = &args[1];
-        size = &args[2];
-    } else if args[1] == "-o" {
-        overwrite_always = true;
-        name = &args[2];
-        size = &args[3];
+    if overwrite_always {
+        args.remove(0);
     }
+    
+    let name = args[0].clone();
+    let size = args[1].clone();
 
     if !is_numeric_positive(&size) {
         return Err(0); // Wrong argument format
