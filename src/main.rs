@@ -36,7 +36,7 @@ fn main() {
                 let response = response.trim();
                 let pattern = Regex::new("^[yYjJ]$").unwrap();
 
-                if !pattern.is_match(&response) {
+                if !pattern.is_match(&response) && !response.is_empty() {
                     println!("Aborting...");
                     return;
                 }
