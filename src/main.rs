@@ -138,10 +138,10 @@ fn random_value_array<'a>(size: usize) -> Vec<u8> {
 fn handle_io_error(e: ErrorKind, filename: &str) {
     match e {
         ErrorKind::NotFound => {
-            println!("The file \"{}\" could not be created in the current directory.", filename)
+            println!("The file \"{}\" could not be created.", filename)
         },
         ErrorKind::PermissionDenied => {
-            println!("Missing privileges to write to \"{}\" in the current directory.", filename)
+            println!("Missing privileges to write to \"{}\".", filename)
         }
         _ => {
             println!("An unexpected error occurred: {}", e.to_string())
