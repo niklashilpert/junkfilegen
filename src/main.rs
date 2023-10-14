@@ -13,23 +13,25 @@ const PROGRESS_BAR_LENGTH: usize = 20;
 
 fn main() {
 
-
+    // Gathers the program arguments
     let program_args: Vec<String> = env::args().collect();
-    //let args = vec!["", "test", "999999999"];
 
+    // Tests whether the program arguments fit the required scheme
     let conf = check_arguments_for_file_config(&program_args);
 
     match conf {
+        // If the arguments are in the right format ...
         Ok(conf) => {
-            println!("File with name \"{}\" and size {}B will be created in this directory.", conf.0, conf.1);
+            println!("File with name \"{}\" and size {}B will be created.", conf.0, conf.1);
 
             let filename = conf.0;
             let filesize = conf.1;
             let overwrite_all = conf.2;
 
             let filepath = format!("./{}", filename);
-            let path = Path::new(&filepath[..]);
+            let path = Path::new(&filepath);
 
+            // If the file already exists and the user didn't specify to always override ...
             if path.is_file() && !overwrite_all {
                 println!("The file you are trying to create already exists. Overwrite? [Y/n]");
                 let response = read_line();
@@ -58,6 +60,7 @@ fn main() {
                 },
             };
         },
+        // If there was an error ...
         Err(e) => {
             if e == 0 {
                 println!("The entered arguments do not provide sufficient information about the file.")
