@@ -22,8 +22,6 @@ fn main() {
     match conf {
         // If the arguments are in the right format ...
         Ok(conf) => {
-            println!("File with name \"{}\" and size {}B will be created.", conf.0, conf.1);
-
             let filename = conf.0;
             let filesize = conf.1;
             let overwrite_always = conf.2;
@@ -58,6 +56,7 @@ fn main() {
 
                     let millis = end - start;
                     let secs = millis / 1000;
+                    println!("File \"{}\" ({}B) created.", filename, filesize);
                     println!("Time taken: {}s {}ms", secs, millis);
                 },
                 Err(e) => {
