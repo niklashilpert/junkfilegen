@@ -63,7 +63,8 @@ fn main() {
         // If there was an error ...
         Err(e) => {
             if e == 0 {
-                println!("The entered arguments do not provide sufficient information about the file.")
+                println!("Syntax wrong. Expected argument chain: \"[-o] <filename> <size in bytes>\"")
+
             } else {
                 println!("The number you entered is too big.");
             }
