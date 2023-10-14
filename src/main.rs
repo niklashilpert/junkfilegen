@@ -73,20 +73,39 @@ fn main() {
 }
 
 fn check_arguments_for_file_config(args: &Vec<String>) -> Result<(&str, usize, bool), usize> {
-    if args.len() >= 3 {
-        let name_index = &args[1];
-        let size_index = &args[2];
-        let overwrite_always = args.contains(&"-o".to_string());
-
-        if is_numeric_positive(&size_index) {
-            return match size_index.parse() {
-                Ok(size) => Ok((name_index, size, overwrite_always)),
-                Err(_) => Err(1),
-            };
-        }
+    let len = args.len();
+    
+    if len != 3 && len != 4 {
+        return Err(0); // Wrong argument format
     }
-    return Err(0);
+
+    let mut name = "";
+    let mut size = "";
+    let mut overwrite_always = false;
+
+    if len == 3 {
+        name = &args[1];
+        size = &args[2];
+    } else if args[1] == "-o" {
+        overwrite_always = true;
+        name = &args[2];
+        size = &args[3];
+    }
+
+    if !is_numeric_positive(&size) {
+        return Err(0); // Wrong argument format
+    }
+    
+    // Tries to parse the size into a number
+    return match size.parse() {
+        Ok(size) => Ok((name, size, overwrite_always)),
+        Err(_) => Err(1), // The number is too big to be parsed into an integer
+    };
+    
+    
+    
 }
+
 
 fn is_numeric_positive(string: &str) -> bool {
     let mut contains_only_zero = true;
